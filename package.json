@@ -1,0 +1,23 @@
+{
+  "name": "quash-backend",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000Q\u0000u\u0000a\u0000s\u0000h\u0000 \u0000B\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000\r\u0000 \u0000",
+  "homepage": "https://github.com/taralamia/quash-backend#readme",
+  "bugs": {
+    "url": "https://github.com/taralamia/quash-backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taralamia/quash-backend.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
