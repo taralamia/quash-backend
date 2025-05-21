@@ -1,7 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const chicken_1 = require("./chicken");
-console.log("Hello Typescript");
-const chicken = new chicken_1.Chicken();
-//chicken.cluck();
+const express_1 = __importDefault(require("express"));
+const port = 8000;
+const app = (0, express_1.default)();
+app.get("/", (req, res) => {
+    res.send("Hello prints in browser too");
+});
+app.listen(port, () => {
+    console.log(`now listening on port ${port}`);
+});
+//export default app;
 //# sourceMappingURL=index.js.map
