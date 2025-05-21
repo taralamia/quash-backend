@@ -1,3 +1,4 @@
 dist/
 node_modules/
 quash_backend_notes.txt
+.vscode/
