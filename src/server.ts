@@ -8,7 +8,9 @@ import pool from "./config/db";
 
 const connectToDB = async () => {
   try {
+    console.log("starting");
     await pool.connect();
+    console.log("Ending");
   } catch (err) {
     console.log(err);
   }
