@@ -10,11 +10,13 @@ services:
       - db
     volumes:
       - .:/usr/src/app
-
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db  
   db:
     container_name: postgres
     image: postgres:10.4
-    hostname: localhost
     ports:
       - "5432:${DB_PORT}"
     volumes:
@@ -30,7 +32,7 @@ services:
     ports:
       - "5050:80"
     volumes:
-      - pgadmin-data:/var/lib/pgadmin  
+      - pgadmin-data:/var/lib/pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
