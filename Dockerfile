@@ -17,4 +17,4 @@ COPY ./src ./src
 RUN npm install
 
 # Use wait to delay app startup until postgres is reachable
-CMD ["/wait", "db:5432", "--", "npm", "run", "start"]
+CMD ["/bin/sh", "-c", "/wait && npm run start"]
