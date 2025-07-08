@@ -1,33 +1,28 @@
-import express, { Request, Response } from "express";
-import path from "path";
+import express from "express";
 import dotenv from "dotenv";
+import { AppDataSource } from "./data-source";
+import userRouter from "./routers/userRouter";
 
 dotenv.config();
 
-import pool from "./config/db";
-
-const connectToDB = async () => {
-  try {
-    console.log("starting");
-    await pool.connect();
-    console.log("Ending");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-connectToDB();
 const app = express();
-app.use(express.urlencoded({ extended: true }));
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
+app.use("/api/v1/users", userRouter);
 
-app.get("/test", (_, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Hello from the setup file",
+app.get("/", (_req, res) => {
+  res.send("Server is running!");
+});
+
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is listening at http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error(" Failed to connect to the database.");
+    console.error(error);
+    process.exit(1);
   });
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running at ${process.env.PORT}`);
-});

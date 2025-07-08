@@ -22,7 +22,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
-    "prettier:fix": "prettier --write src"
+    "prettier:fix": "prettier --write src",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -42,7 +43,9 @@
     "express": "^5.1.0",
     "mongoose": "^8.15.1",
     "pg": "^8.16.0",
+    "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
+    "typeorm": "^0.3.25",
     "typescript-require": "^0.3.0"
   }
 }
