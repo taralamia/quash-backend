@@ -21,7 +21,7 @@ AppDataSource.initialize()
       console.log(`Server is listening at http://localhost:${PORT}`);
     });
   })
-  .catch((error) => {
+  .catch(error => {
     console.error(" Failed to connect to the database.");
     console.error(error);
     process.exit(1);
