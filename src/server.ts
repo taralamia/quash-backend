@@ -1,10 +1,28 @@
-import express, { Request, Response } from "express";
-import { port, connectToDatabase } from "./config/db";
+import express from "express";
+import dotenv from "dotenv";
+import { AppDataSource } from "./data-source";
+import userRouter from "./routers/userRouter";
+
+dotenv.config();
+
 const app = express();
-connectToDatabase();
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, TypeScript Express!");
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use("/api/v1/users", userRouter);
+
+app.get("/", (_req, res) => {
+  res.send("Server is running!");
 });
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is listening at http://localhost:${PORT}`);
+    });
+  })
+  .catch(error => {
+    console.error(" Failed to connect to the database.");
+    console.error(error);
+    process.exit(1);
+  });
