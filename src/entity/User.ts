@@ -1,16 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  OneToMany,
+} from "typeorm";
+import { Vehicle } from "./Vehicle";
 @Entity()
+@Unique(["email"])
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  firstName!: string;
+  fullName!: string;
 
   @Column()
-  lastName!: string;
+  email!: string;
 
   @Column()
-  age!: number;
+  password!: string;
+
+  @Column()
+  phoneNumber!: string;
+
+  @OneToMany(() => Vehicle, vehicle => vehicle.user, {
+    cascade: true,
+  })
+  vehicles!: Vehicle[];
 }

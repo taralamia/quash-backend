@@ -1,5 +1,7 @@
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
+import { Vehicle } from "../entity/Vehicle";
+import  bcrypt  from "bcrypt";
 export class UserService {
   constructor(private readonly userRepository: Repository<User>) {}
   async findAll() {
@@ -11,10 +13,44 @@ export class UserService {
     return users;
   }
 
-  async createUser(newuser: User) {
-    const user = this.userRepository.create(newuser);
-    await this.userRepository.save(user);
-    return user;
+  async createUser(data: {
+    fullName: string;
+    email: string;
+    password: string;
+    phoneNumber: string;
+    vehicles?: {
+      licensePlate: string;
+      make?: string;
+      model?: string;
+      color?: string;
+    }[];
+  }) {
+    const existing = await this.userRepository.findOne({
+      where: { email: data.email },
+    });
+    if (existing) throw new Error("Email already registered");
+
+    // hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+    const user = new User();
+    user.fullName = data.fullName;
+    user.email = data.email;
+    user.password = hashedPassword;
+    user.phoneNumber = data.phoneNumber;
+
+    if (data.vehicles?.length) {
+      user.vehicles = data.vehicles.map(v => {
+        const vehicle = new Vehicle();
+        vehicle.licensePlate = v.licensePlate;
+        vehicle.make = v.make;
+        vehicle.model = v.model;
+        vehicle.color = v.color;
+        return vehicle;
+      });
+    }
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
   }
 
   async updateUser(id: number, data: Partial<User>) {
