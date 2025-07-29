@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   logging: !!process.env.POSTGRES_LOGGING,
   entities: [User, Vehicle],
-  synchronize: true, 
+  synchronize: true,
   migrations: [path.join(__dirname, "/migrations/*.js")],
   subscribers: [path.join(__dirname, "/subscriber/*.js")],
   ssl: !!process.env.POSTGRES_SSL,

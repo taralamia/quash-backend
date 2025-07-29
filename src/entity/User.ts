@@ -6,7 +6,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { Vehicle } from "./Vehicle";
-@Entity()
+@Entity('users')
 @Unique(["email"])
 export class User {
   @PrimaryGeneratedColumn()
@@ -23,7 +23,11 @@ export class User {
 
   @Column()
   phoneNumber!: string;
+  @Column({ nullable: true })
+  verificationCode?: string;
 
+  @Column({ type: "bigint", nullable: true })
+  verificationCodeExpires?: number;
   @OneToMany(() => Vehicle, vehicle => vehicle.user, {
     cascade: true,
   })

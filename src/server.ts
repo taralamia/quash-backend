@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { AppDataSource } from "./data-source";
-import userRouter from "./routers/userRouter";
+import authRouter from "./routers/auth/authRouter";
 
 dotenv.config();
 
@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/users", authRouter);
 
 app.get("/", (_req, res) => {
   res.send("Server is running!");

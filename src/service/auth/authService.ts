@@ -1,14 +1,29 @@
 import { Repository } from "typeorm";
-import { User } from "../entity/User";
-import { Vehicle } from "../entity/Vehicle";
+import { User } from "../../entity/User";
+import { Vehicle } from "../../entity/Vehicle";
 import  bcrypt  from "bcrypt";
-export class UserService {
-  constructor(private readonly userRepository: Repository<User>) {}
+import crypto from "crypto";
+import { MailService } from "../mailService";
+export class authService {
+  constructor(
+    private readonly userRepository: Repository<User>,
+    private readonly mailService: MailService
+  ) {}
+  private validateId(id: number): void {
+    if (isNaN(id)) {
+      throw new Error(`Invalid ID: ${id}. Must be a valid number`);
+    }
+  }
+    generateVerificationCode()
+  {
+    return crypto.randomInt(100000, 999999).toString();
+  }
   async findAll() {
     const users = await this.userRepository.find();
     return users;
   }
   async findOne(id: number) {
+     this.validateId(id);
     const users = await this.userRepository.findOne({ where: { id } });
     return users;
   }
@@ -30,6 +45,9 @@ export class UserService {
     });
     if (existing) throw new Error("Email already registered");
 
+    const verificationCode = this.generateVerificationCode();
+    const verificationCodeExpires = Date.now() + 24 * 60 * 60 * 1000;
+
     // hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.password, salt);
@@ -38,6 +56,9 @@ export class UserService {
     user.email = data.email;
     user.password = hashedPassword;
     user.phoneNumber = data.phoneNumber;
+    user.verificationCode = verificationCode;
+    user.verificationCodeExpires = verificationCodeExpires;
+
 
     if (data.vehicles?.length) {
       user.vehicles = data.vehicles.map(v => {
@@ -46,13 +67,45 @@ export class UserService {
         vehicle.make = v.make;
         vehicle.model = v.model;
         vehicle.color = v.color;
+        vehicle.user = user;
         return vehicle;
       });
     }
     const savedUser = await this.userRepository.save(user);
-    return savedUser;
+    // Send verification email using MailService
+    await this.mailService.sendVerificationEmail({
+      email: data.email,
+      code: verificationCode
+    });
+   const { password, verificationCode: _, verificationCodeExpires: __, ...safeUser } = savedUser;
+   return {
+    ...safeUser,
+    vehicles: safeUser.vehicles?.map(({ user, ...rest }) => rest)
+  };
+    
   }
+  async verifyEmail(data:{
+    email: string,
+    code: string
+  })
+  {
+     const existing = await this.userRepository.findOne({
+      where: { email: data.email },
+    });
+    if (!existing) throw new Error("User not found!");
+    if (
+    existing.verificationCode !== data.code ||
+    existing.verificationCodeExpires! < Date.now()
+  ) {
+    throw new Error("Invalid or expired verification code!");
+  }
+  existing.verificationCode = "";
+  existing.verificationCodeExpires = undefined;
+  await this.userRepository.save(existing);
 
+  return { message: "Email verified successfully!" };
+
+  }
   async updateUser(id: number, data: Partial<User>) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (user) {
