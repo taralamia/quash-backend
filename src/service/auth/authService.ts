@@ -1,9 +1,10 @@
 import { Repository } from "typeorm";
 import { User } from "../../entity/User";
 import { Vehicle } from "../../entity/Vehicle";
-import  bcrypt  from "bcrypt";
+import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { MailService } from "../mailService";
+import { instanceToPlain } from "class-transformer";
 export class authService {
   constructor(
     private readonly userRepository: Repository<User>,
@@ -14,8 +15,7 @@ export class authService {
       throw new Error(`Invalid ID: ${id}. Must be a valid number`);
     }
   }
-    generateVerificationCode()
-  {
+  generateVerificationCode() {
     return crypto.randomInt(100000, 999999).toString();
   }
   async findAll() {
@@ -23,7 +23,7 @@ export class authService {
     return users;
   }
   async findOne(id: number) {
-     this.validateId(id);
+    this.validateId(id);
     const users = await this.userRepository.findOne({ where: { id } });
     return users;
   }
@@ -59,7 +59,6 @@ export class authService {
     user.verificationCode = verificationCode;
     user.verificationCodeExpires = verificationCodeExpires;
 
-
     if (data.vehicles?.length) {
       user.vehicles = data.vehicles.map(v => {
         const vehicle = new Vehicle();
@@ -75,36 +74,26 @@ export class authService {
     // Send verification email using MailService
     await this.mailService.sendVerificationEmail({
       email: data.email,
-      code: verificationCode
+      code: verificationCode,
     });
-   const { password, verificationCode: _, verificationCodeExpires: __, ...safeUser } = savedUser;
-   return {
-    ...safeUser,
-    vehicles: safeUser.vehicles?.map(({ user, ...rest }) => rest)
-  };
-    
+     return instanceToPlain(savedUser, { enableCircularCheck: true });
   }
-  async verifyEmail(data:{
-    email: string,
-    code: string
-  })
-  {
-     const existing = await this.userRepository.findOne({
+  async verifyEmail(data: { email: string; code: string }) {
+    const existing = await this.userRepository.findOne({
       where: { email: data.email },
     });
     if (!existing) throw new Error("User not found!");
     if (
-    existing.verificationCode !== data.code ||
-    existing.verificationCodeExpires! < Date.now()
-  ) {
-    throw new Error("Invalid or expired verification code!");
-  }
-  existing.verificationCode = "";
-  existing.verificationCodeExpires = undefined;
-  await this.userRepository.save(existing);
+      existing.verificationCode !== data.code ||
+      existing.verificationCodeExpires! < Date.now()
+    ) {
+      throw new Error("Invalid or expired verification code!");
+    }
+    existing.verificationCode = "";
+    existing.verificationCodeExpires = undefined;
+    await this.userRepository.save(existing);
 
-  return { message: "Email verified successfully!" };
-
+    return { message: "Email verified successfully!" };
   }
   async updateUser(id: number, data: Partial<User>) {
     const user = await this.userRepository.findOne({ where: { id } });

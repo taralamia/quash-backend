@@ -40,6 +40,7 @@
   "dependencies": {
     "@types/express": "^5.0.2",
     "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
     "crpyto": "^0.0.1-security",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

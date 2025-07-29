@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./User";
-
+import { Exclude } from 'class-transformer';
 @Entity()
 export class Vehicle {
   @PrimaryGeneratedColumn()
@@ -21,5 +21,6 @@ export class Vehicle {
   @ManyToOne(() => User, user => user.vehicles, {
     onDelete: "CASCADE",
   })
+  @Exclude()
   user!: User;
 }

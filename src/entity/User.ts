@@ -5,8 +5,9 @@ import {
   Unique,
   OneToMany,
 } from "typeorm";
+import { Expose } from 'class-transformer';
 import { Vehicle } from "./Vehicle";
-@Entity('users')
+@Entity("users")
 @Unique(["email"])
 export class User {
   @PrimaryGeneratedColumn()
@@ -31,5 +32,6 @@ export class User {
   @OneToMany(() => Vehicle, vehicle => vehicle.user, {
     cascade: true,
   })
+   @Expose()
   vehicles!: Vehicle[];
 }

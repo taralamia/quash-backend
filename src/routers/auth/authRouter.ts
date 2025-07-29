@@ -28,8 +28,17 @@ authRouter.post(
   "/verify-email",
   asyncHandler(authController.verifyEmail.bind(authController))
 );
-authRouter.get("/:id", asyncHandler(authController.findOne.bind(authController)));
-authRouter.put("/:id", asyncHandler(authController.updateUser.bind(authController)));
-authRouter.delete("/:id", asyncHandler(authController.deleteUser.bind(authController)));
+authRouter.get(
+  "/:id",
+  asyncHandler(authController.findOne.bind(authController))
+);
+authRouter.put(
+  "/:id",
+  asyncHandler(authController.updateUser.bind(authController))
+);
+authRouter.delete(
+  "/:id",
+  asyncHandler(authController.deleteUser.bind(authController))
+);
 
 export default authRouter;

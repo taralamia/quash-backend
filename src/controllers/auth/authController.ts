@@ -4,8 +4,6 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entity/User";
 import { MailService } from "../../service/mailService";
 
-
-
 export class AuthController {
   constructor(private readonly userService: authService) {}
 
@@ -18,7 +16,7 @@ export class AuthController {
       return res.status(400).json({ error: error.message });
     }
   };
- verifyEmail = async (req: Request, res: Response) => {
+  verifyEmail = async (req: Request, res: Response) => {
     try {
       const result = await this.userService.verifyEmail(req.body);
       return res.status(200).json(result);
