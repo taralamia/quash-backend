@@ -4,17 +4,18 @@ import "dotenv/config";
 import path from "path";
 import { User } from "./entity/User";
 import { Vehicle } from "./entity/Vehicle";
+import { env } from "./constants/envConfig";
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  logging: !!process.env.POSTGRES_LOGGING,
+  host: env.DB_HOST,
+  port: Number(env.DB_PORT),
+  username: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+  logging: !!env.POSTGRES_LOGGING,
   entities: [User, Vehicle],
   synchronize: true,
   migrations: [path.join(__dirname, "/migrations/*.js")],
   subscribers: [path.join(__dirname, "/subscriber/*.js")],
-  ssl: !!process.env.POSTGRES_SSL,
+  ssl: !!env.POSTGRES_SSL,
 });

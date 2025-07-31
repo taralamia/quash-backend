@@ -21,5 +21,5 @@ export const createUserSchema = z.object({
 });
 
 export const findOneUserSchema = z.object({
-  id: z.string().regex(/^\d+$/, "ID must be a number"),
+  id: z.string().uuid("Invalid UUID format"),
 });

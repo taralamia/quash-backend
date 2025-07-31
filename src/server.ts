@@ -1,7 +1,7 @@
 import express from "express";
 import { AppDataSource } from "./data-source";
 import authRouter from "./routers/auth/authRouter";
-import { env } from "./envConfig";
+import { env } from "./constants/envConfig";
 import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 const PORT = env.PORT;

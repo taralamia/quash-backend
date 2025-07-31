@@ -15,4 +15,5 @@ export const envSchema = z.object({
   EMAIL_USER: z.email(),
   EMAIL_PASSWORD: z.string(),
   EMAIL_FROM: z.email(),
+  POSTGRES_SSL: z.string().optional().default("false"),
 });

@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { envSchema } from "./schemas/envSchema";
+import { envSchema } from "../schemas/envSchema";
 
 dotenv.config(); // Load .env into process.env
 
