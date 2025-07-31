@@ -10,8 +10,8 @@ import { Vehicle } from "./Vehicle";
 @Entity("users")
 @Unique(["email"])
 export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
   @Column()
   fullName!: string;

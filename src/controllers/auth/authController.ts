@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
 import { authService } from "../../service/auth/authService";
-import { AppDataSource } from "../../data-source";
-import { User } from "../../entity/User";
-import { MailService } from "../../service/mailService";
 
 export class AuthController {
   constructor(private readonly userService: authService) {}
@@ -18,32 +15,21 @@ export class AuthController {
   };
   // Get a user by ID
   findOne = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid ID parameter" });
-    }
-
+    const id = (req as any).validatedId;
     const user = await this.userService.findOne(id);
     return res.status(200).json(user);
   };
 
   // Update a user
   updateUser = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid ID parameter" });
-    }
-
+    const id = (req as any).validatedId;
     const updated = await this.userService.updateUser(id, req.body);
     return res.status(200).json(updated);
   };
 
   // Delete a user
   deleteUser = async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid ID parameter" });
-    }
+    const id = (req as any).validatedId;
     const deleted = await this.userService.delete(id);
     return res.status(200).json(deleted);
   };

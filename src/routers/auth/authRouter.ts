@@ -6,7 +6,7 @@ import { AppDataSource } from "../../data-source";
 import { authService } from "../../service/auth/authService";
 import { MailService } from "../../service/mailService";
 import { User } from "../../entity/User";
-
+import { validateUUIDParam } from "../../middleware/users/validateUUIDParam";
 const authRouter = Router();
 
 // Inject dependencies
@@ -15,21 +15,31 @@ const userRepo = AppDataSource.getRepository(User);
 const userServiceInstance = new authService(userRepo, mailService);
 const authController = new AuthController(userServiceInstance);
 
-const asyncHandler = (fn: Function) => (req: any, res: any, next: any) =>
-  Promise.resolve(fn(req, res, next)).catch(next);
+import { Request, Response, NextFunction, RequestHandler } from "express";
+
+const asyncHandler =
+  (
+    fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
+  ): RequestHandler =>
+  (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 
 //authRouter.get("/", asyncHandler(authController.createUser.bind(authController)));
 authRouter.post(
   "/create",
+  validateUUIDParam,
   validate(createUserSchema),
   asyncHandler(authController.createUser.bind(authController))
 );
 authRouter.post(
   "/verify-email",
+  validateUUIDParam,
   asyncHandler(authController.verifyEmail.bind(authController))
 );
 authRouter.get(
   "/:id",
+  validateUUIDParam,
   asyncHandler(authController.findOne.bind(authController))
 );
 authRouter.put(

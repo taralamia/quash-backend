@@ -11,11 +11,7 @@ export class authService {
     private readonly userRepository: Repository<User>,
     private readonly mailService: MailService
   ) {}
-  private validateId(id: number): void {
-    if (isNaN(id)) {
-      throw new Error(`Invalid ID: ${id}. Must be a valid number`);
-    }
-  }
+
   generateVerificationCode() {
     return crypto.randomInt(100000, 999999).toString();
   }
@@ -23,8 +19,7 @@ export class authService {
     const users = await this.userRepository.find();
     return users;
   }
-  async findOne(id: number) {
-    this.validateId(id);
+  async findOne(id: string) {
     const users = await this.userRepository.findOne({ where: { id } });
     return users;
   }
@@ -96,7 +91,7 @@ export class authService {
 
     return { message: "Email verified successfully!" };
   }
-  async updateUser(id: number, data: Partial<User>) {
+  async updateUser(id: string, data: Partial<User>) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (user) {
       this.userRepository.merge(user, data);
@@ -107,7 +102,7 @@ export class authService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (user) {
