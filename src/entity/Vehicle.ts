@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./User";
-import { Exclude } from 'class-transformer';
+import { Exclude } from "class-transformer";
 @Entity()
 export class Vehicle {
   @PrimaryGeneratedColumn()

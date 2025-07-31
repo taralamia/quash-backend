@@ -1,18 +1,14 @@
 import express from "express";
 import { AppDataSource } from "./data-source";
 import authRouter from "./routers/auth/authRouter";
-import {env} from "./envConfig";
-
+import { env } from "./envConfig";
+import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 const PORT = env.PORT;
 
 app.use(express.json());
 app.use("/api/v1/users", authRouter);
-
-app.get("/", (_req, res) => {
-  res.send("Server is running!");
-});
-
+app.use(errorHandler);
 AppDataSource.initialize()
   .then(() => {
     app.listen(PORT, () => {

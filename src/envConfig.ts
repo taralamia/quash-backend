@@ -7,7 +7,7 @@ const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
   console.error("Invalid environment variables!", parsedEnv.error.format()); //z.treeifyError(err)
-  process.exit(1); 
+  process.exit(1);
 }
 
 export const env = parsedEnv.data;

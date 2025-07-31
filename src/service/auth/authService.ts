@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { MailService } from "../mailService";
 import { instanceToPlain } from "class-transformer";
+import { AppError } from "../../utils/AppError";
 export class authService {
   constructor(
     private readonly userRepository: Repository<User>,
@@ -43,7 +44,7 @@ export class authService {
     const existing = await this.userRepository.findOne({
       where: { email: data.email },
     });
-    if (existing) throw new Error("Email already registered");
+    if (existing) throw new AppError("Email already registered", 409);
 
     const verificationCode = this.generateVerificationCode();
     const verificationCodeExpires = Date.now() + 24 * 60 * 60 * 1000;
@@ -76,18 +77,18 @@ export class authService {
       email: data.email,
       code: verificationCode,
     });
-     return instanceToPlain(savedUser, { enableCircularCheck: true });
+    return instanceToPlain(savedUser, { enableCircularCheck: true });
   }
   async verifyEmail(data: { email: string; code: string }) {
     const existing = await this.userRepository.findOne({
       where: { email: data.email },
     });
-    if (!existing) throw new Error("User not found!");
+    if (!existing) throw new AppError("User not found!", 404);
     if (
       existing.verificationCode !== data.code ||
       existing.verificationCodeExpires! < Date.now()
     ) {
-      throw new Error("Invalid or expired verification code!");
+      throw new AppError("Invalid or expired verification code!", 400);
     }
     existing.verificationCode = "";
     existing.verificationCodeExpires = undefined;

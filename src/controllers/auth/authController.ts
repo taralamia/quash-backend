@@ -9,20 +9,12 @@ export class AuthController {
 
   // Create a new user
   createUser = async (req: Request, res: Response) => {
-    try {
-      const data = await this.userService.createUser(req.body);
-      return res.status(201).json(data);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
-    }
+    const data = await this.userService.createUser(req.body);
+    return res.status(201).json(data);
   };
   verifyEmail = async (req: Request, res: Response) => {
-    try {
-      const result = await this.userService.verifyEmail(req.body);
-      return res.status(200).json(result);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
-    }
+    const result = await this.userService.verifyEmail(req.body);
+    return res.status(200).json(result);
   };
   // Get a user by ID
   findOne = async (req: Request, res: Response) => {
@@ -30,12 +22,9 @@ export class AuthController {
     if (isNaN(id)) {
       return res.status(400).json({ error: "Invalid ID parameter" });
     }
-    try {
-      const user = await this.userService.findOne(id);
-      return res.status(200).json(user);
-    } catch (error: any) {
-      return res.status(404).json({ error: error.message });
-    }
+
+    const user = await this.userService.findOne(id);
+    return res.status(200).json(user);
   };
 
   // Update a user
@@ -44,12 +33,9 @@ export class AuthController {
     if (isNaN(id)) {
       return res.status(400).json({ error: "Invalid ID parameter" });
     }
-    try {
-      const updated = await this.userService.updateUser(id, req.body);
-      return res.status(200).json(updated);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
-    }
+
+    const updated = await this.userService.updateUser(id, req.body);
+    return res.status(200).json(updated);
   };
 
   // Delete a user
@@ -58,11 +44,7 @@ export class AuthController {
     if (isNaN(id)) {
       return res.status(400).json({ error: "Invalid ID parameter" });
     }
-    try {
-      const deleted = await this.userService.delete(id);
-      return res.status(200).json(deleted);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
-    }
+    const deleted = await this.userService.delete(id);
+    return res.status(200).json(deleted);
   };
 }

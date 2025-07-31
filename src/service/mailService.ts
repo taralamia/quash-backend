@@ -16,7 +16,7 @@ export class MailService {
           <br />
           <p>– The A1A Car Wash Team</p>
         </div>
-      `, 
+      `,
     };
     await transporter.sendMail(mailOptions);
   }
