@@ -15,6 +15,6 @@ export class Vehicle {
 
   @Column({ nullable: true })
   color?: string;
- @Column()
-  userId!: string;  
+  @Column()
+  userId!: string;
 }

@@ -6,8 +6,7 @@ export const createUserSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   phoneNumber: z
     .string()
-    .regex(/^(?:\+8801|01)[0-9]{9}$/, "Invalid phone number")
-    .optional(),
+    .regex(/^(?:\+8801|01)[0-9]{9}$/, "Invalid phone number"),
   vehicles: z
     .array(
       z.object({
@@ -23,3 +22,4 @@ export const createUserSchema = z.object({
 export const findOneUserSchema = z.object({
   id: z.string().uuid("Invalid UUID format"),
 });
+export type CreateUserInput = z.infer<typeof createUserSchema>;

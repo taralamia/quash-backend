@@ -13,8 +13,8 @@ const authRouter = Router();
 // Inject dependencies
 const mailService = new MailService();
 const userRepo = AppDataSource.getRepository(User);
-const vehicleRepo = AppDataSource.getRepository(Vehicle); 
-const userServiceInstance = new authService(userRepo, mailService,vehicleRepo);
+const vehicleRepo = AppDataSource.getRepository(Vehicle);
+const userServiceInstance = new authService(userRepo, mailService, vehicleRepo);
 const authController = new AuthController(userServiceInstance);
 
 import { Request, Response, NextFunction, RequestHandler } from "express";

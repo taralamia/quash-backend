@@ -1,9 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  Unique
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 @Entity("users")
 @Unique(["email"])
 export class User {
@@ -26,5 +21,4 @@ export class User {
 
   @Column({ type: "bigint", nullable: true })
   verificationCodeExpires?: number;
- 
 }

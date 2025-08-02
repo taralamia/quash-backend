@@ -4,8 +4,8 @@ import { Vehicle } from "../../entity/Vehicle";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { MailService } from "../mailService";
-import { instanceToPlain } from "class-transformer";
 import { AppError } from "../../utils/AppError";
+import type { CreateUserInput } from "../../schemas/userSchema";
 export class authService {
   constructor(
     private readonly userRepository: Repository<User>,
@@ -25,18 +25,7 @@ export class authService {
     return users;
   }
 
-  async createUser(data: {
-    fullName: string;
-    email: string;
-    password: string;
-    phoneNumber: string;
-    vehicles?: {
-      licensePlate: string;
-      make?: string;
-      model?: string;
-      color?: string;
-    }[];
-  }) {
+  async createUser(data: CreateUserInput) {
     const existing = await this.userRepository.findOne({
       where: { email: data.email },
     });
@@ -55,20 +44,20 @@ export class authService {
     user.phoneNumber = data.phoneNumber;
     user.verificationCode = verificationCode;
     user.verificationCodeExpires = verificationCodeExpires;
-    
+
     const savedUser = await this.userRepository.save(user);
     if (data.vehicles?.length) {
-    const vehiclesToSave = data.vehicles.map((v) => {
-      const vehicle = new Vehicle();
-      vehicle.licensePlate = v.licensePlate;
-      vehicle.make = v.make;
-      vehicle.model = v.model;
-      vehicle.color = v.color;
-      vehicle.userId = savedUser.id;
-return vehicle;
-    });
-    await this.vehicleRepository.save(vehiclesToSave);
-  }
+      const vehiclesToSave = data.vehicles.map(v => {
+        const vehicle = new Vehicle();
+        vehicle.licensePlate = v.licensePlate;
+        vehicle.make = v.make;
+        vehicle.model = v.model;
+        vehicle.color = v.color;
+        vehicle.userId = savedUser.id;
+        return vehicle;
+      });
+      await this.vehicleRepository.save(vehiclesToSave);
+    }
     // Send verification email using MailService
     await this.mailService.sendVerificationEmail({
       email: data.email,
