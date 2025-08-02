@@ -6,13 +6,15 @@ import { AppDataSource } from "../../data-source";
 import { authService } from "../../service/auth/authService";
 import { MailService } from "../../service/mailService";
 import { User } from "../../entity/User";
+import { Vehicle } from "../../entity/Vehicle";
 import { validateUUIDParam } from "../../middleware/users/validateUUIDParam";
 const authRouter = Router();
 
 // Inject dependencies
 const mailService = new MailService();
 const userRepo = AppDataSource.getRepository(User);
-const userServiceInstance = new authService(userRepo, mailService);
+const vehicleRepo = AppDataSource.getRepository(Vehicle); 
+const userServiceInstance = new authService(userRepo, mailService,vehicleRepo);
 const authController = new AuthController(userServiceInstance);
 
 import { Request, Response, NextFunction, RequestHandler } from "express";

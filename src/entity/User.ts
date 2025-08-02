@@ -2,11 +2,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  Unique,
-  OneToMany,
+  Unique
 } from "typeorm";
-import { Expose } from "class-transformer";
-import { Vehicle } from "./Vehicle";
 @Entity("users")
 @Unique(["email"])
 export class User {
@@ -29,9 +26,5 @@ export class User {
 
   @Column({ type: "bigint", nullable: true })
   verificationCodeExpires?: number;
-  @OneToMany(() => Vehicle, vehicle => vehicle.user, {
-    cascade: true,
-  })
-  @Expose()
-  vehicles!: Vehicle[];
+ 
 }

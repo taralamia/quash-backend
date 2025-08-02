@@ -9,7 +9,8 @@ import { AppError } from "../../utils/AppError";
 export class authService {
   constructor(
     private readonly userRepository: Repository<User>,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly vehicleRepository: Repository<Vehicle>
   ) {}
 
   generateVerificationCode() {
@@ -54,25 +55,26 @@ export class authService {
     user.phoneNumber = data.phoneNumber;
     user.verificationCode = verificationCode;
     user.verificationCodeExpires = verificationCodeExpires;
-
-    if (data.vehicles?.length) {
-      user.vehicles = data.vehicles.map(v => {
-        const vehicle = new Vehicle();
-        vehicle.licensePlate = v.licensePlate;
-        vehicle.make = v.make;
-        vehicle.model = v.model;
-        vehicle.color = v.color;
-        vehicle.user = user;
-        return vehicle;
-      });
-    }
+    
     const savedUser = await this.userRepository.save(user);
+    if (data.vehicles?.length) {
+    const vehiclesToSave = data.vehicles.map((v) => {
+      const vehicle = new Vehicle();
+      vehicle.licensePlate = v.licensePlate;
+      vehicle.make = v.make;
+      vehicle.model = v.model;
+      vehicle.color = v.color;
+      vehicle.userId = savedUser.id;
+return vehicle;
+    });
+    await this.vehicleRepository.save(vehiclesToSave);
+  }
     // Send verification email using MailService
     await this.mailService.sendVerificationEmail({
       email: data.email,
       code: verificationCode,
     });
-    return instanceToPlain(savedUser, { enableCircularCheck: true });
+    return savedUser;
   }
   async verifyEmail(data: { email: string; code: string }) {
     const existing = await this.userRepository.findOne({
