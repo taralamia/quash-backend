@@ -1,20 +1,14 @@
 import express from "express";
-import dotenv from "dotenv";
 import { AppDataSource } from "./data-source";
-import userRouter from "./routers/userRouter";
-
-dotenv.config();
-
+import authRouter from "./routers/auth/authRouter";
+import { env } from "./constants/envConfig";
+import { errorHandler } from "./middleware/errorHandler";
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = env.PORT;
 
 app.use(express.json());
-app.use("/api/v1/users", userRouter);
-
-app.get("/", (_req, res) => {
-  res.send("Server is running!");
-});
-
+app.use("/api/v1/users", authRouter);
+app.use(errorHandler);
 AppDataSource.initialize()
   .then(() => {
     app.listen(PORT, () => {

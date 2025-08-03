@@ -1,16 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-
-@Entity()
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
+@Entity("users")
+@Unique(["email"])
 export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
   @Column()
-  firstName!: string;
+  fullName!: string;
 
   @Column()
-  lastName!: string;
+  email!: string;
 
   @Column()
-  age!: number;
+  password!: string;
+
+  @Column()
+  phoneNumber!: string;
+  @Column({ nullable: true })
+  verificationCode?: string;
+
+  @Column({ type: "bigint", nullable: true })
+  verificationCodeExpires?: number;
 }
