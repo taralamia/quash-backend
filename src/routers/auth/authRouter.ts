@@ -30,13 +30,11 @@ const asyncHandler =
 //authRouter.get("/", asyncHandler(authController.createUser.bind(authController)));
 authRouter.post(
   "/create",
-  validateUUIDParam,
   validate(createUserSchema),
   asyncHandler(authController.createUser.bind(authController))
 );
 authRouter.post(
   "/verify-email",
-  validateUUIDParam,
   asyncHandler(authController.verifyEmail.bind(authController))
 );
 authRouter.get(

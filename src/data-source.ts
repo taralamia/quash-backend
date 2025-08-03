@@ -17,5 +17,5 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   migrations: [path.join(__dirname, "/migrations/*.js")],
   subscribers: [path.join(__dirname, "/subscriber/*.js")],
-  ssl: !!env.POSTGRES_SSL,
+  ssl: env.POSTGRES_SSL === "true",
 });
