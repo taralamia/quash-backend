@@ -1,7 +1,11 @@
+import {
+  SafeUser,
+  UpdateUserPatch,
+} from "../../types/interfaces/entity-helper";
+import { CreateUserInput } from "../../schemas/userSchema";
 export interface IUserService {
-  createUser(data: any): Promise<any>;
-  findByEmail(email: string): Promise<any>;
-  updateUser(id: string, data: any): Promise<any>;
-  deleteUser(id: string): Promise<any>;
-  findOneUser(id: string): Promise<any>;
+  createUser(data: CreateUserInput): Promise<SafeUser>;
+  getUser(id: string): Promise<SafeUser>;
+  updateUser(id: string, patch: UpdateUserPatch): Promise<SafeUser>;
+  deleteUser(id: string): Promise<void>;
 }

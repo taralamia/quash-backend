@@ -22,4 +22,16 @@ export const createUserSchema = z.object({
 export const findOneUserSchema = z.object({
   id: z.string().uuid("Invalid UUID format"),
 });
+export const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+export const updateUserSchema = z
+  .object({
+    fullName: z.string().optional(),
+    phoneNumber: z.string().optional(),
+  })
+  .strict();
 export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type loginInput = z.infer<typeof loginSchema>;
+export type updateInput = z.infer<typeof updateUserSchema>;
