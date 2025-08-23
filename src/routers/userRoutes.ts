@@ -11,7 +11,7 @@ const vehicleRepo = AppDataSource.getRepository(Vehicle);
 const userService = new UserService(userRepo, vehicleRepo);
 const userController = new UserController(userService);
 //CRUD Routes
-router.post("/users", userController.createUser);
+router.post("/create-user", userController.createUser);
 router.get("/users/:id", userController.getUser);
 router.patch("/users/:id", userController.updateUser);
 router.delete("/users/:id", userController.deleteUser);

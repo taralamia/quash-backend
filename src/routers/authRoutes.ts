@@ -21,12 +21,10 @@ const authService = new AuthService(
   userService,
   tokenService
 );
-const authController = new AuthController(userService, authService);
-
+const authController = new AuthController(authService);
 //Auth routes
 router.post("/auth/signup", authController.signUp);
 router.post("/auth/verify-email", authController.verifyEmail);
 router.post("/auth/signin", authController.signIn);
 router.post("/auth/refresh", authController.refresh);
-
 export default router;

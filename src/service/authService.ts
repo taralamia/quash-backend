@@ -24,66 +24,76 @@ export class AuthService implements IAuthService {
   async signUp(input: CreateUserInput): Promise<{ user: SafeUser }> {
     {
       //1. Check existing user
+      const email = input.email.toLowerCase().trim();
       const existingUser = await this.users.findOne({
-        where: { email: input.email },
+        where: { email: email},
       });
       if (existingUser) {
         throw new AppError("User with this email already exists");
       }
       //2. Create via userService
-      const safeUser = await this.userService.createUser(input);
+       const safeUser = await this.userService.createUser({ ...input, email });
+      // Generate Verification code
+       const generatedVerificationCode = this.generateVerificationCode();
+      const expiresAtMs = Date.now() + 20 * 60 * 1000; 
+      
       //3. Update verification field without fetching password
-      await this.users.update(safeUser.id, {
-        verificationCode: this.generateVerificationCode(),
-        verificationCodeExpires: Date.now() + 24 * 60 * 60 * 1000,
+      const { affected } = await this.users.update(safeUser.id, {
+       verificationCode: generatedVerificationCode,            
+       verificationCodeExpires: expiresAtMs,     
       });
-      //4. Get the verification code
-      const { verificationCode } = (await this.users.findOne({
-        where: { id: safeUser.id },
-        select: ["verificationCode"],
-      })) as { verificationCode: string };
-      //5. send the email
+      if (affected !== 1) {
+       throw new AppError("Failed to set verification code", 500);
+       }
+      //4. send the email
       await this.mailService.sendVerificationEmail({
-        email: input.email,
-        code: verificationCode,
+        email,
+        code: generatedVerificationCode,
       });
       return {
         user: safeUser,
       };
     }
   }
-  async verifyEmail(email: string, code: string): Promise<void> {
+ async verifyEmail(email: string, code: string): Promise<void> {
+  
     //1. Find user with necessary fields
+    const userEmail = email.toLowerCase().trim();
     const user = await this.users.findOne({
-      where: { email },
-      select: ["verificationCode", "verificationCodeExpires", "isVerified"],
+      where: { email: userEmail },
+      select: ["id","verificationCode", "verificationCodeExpires", "isVerified"],
     });
-    //2. Validate user exists
-    if (!user) {
+    //2.If user not found
+     if (!user) {
       throw new AppError("User not found", 404);
     }
     //3. If already verified
     if (user.isVerified) {
       throw new AppError("Email already verified", 400);
     }
-    //4. Invalid verification code
+    //4. Check if Verification code expires
+     if (
+    !user.verificationCode ||
+    user.verificationCodeExpires == null ||
+    user.verificationCodeExpires <= Date.now()
+  ) {
+    throw new AppError("Invalid or expired verification code", 400);
+  }
+  //5. compare the user provided code and database code
     if (user.verificationCode !== code) {
       throw new AppError("Invalid verification code", 400);
     }
-    //5. Check if Verification code expires
-    if (
-      user.verificationCodeExpires &&
-      user.verificationCodeExpires < Date.now()
-    ) {
-      throw new AppError("Verification code expired", 400);
-    }
-    //6. Mark the user as verified and clear verification fields
-    await this.users.update(user.id, {
+  //6. Mark the user as verified and clear verification fields
+    const updateResult = await this.users.update(user.id, {
       isVerified: true,
-      verificationCode: "",
-      verificationCodeExpires: undefined,
+      verificationCode: undefined,
+      verificationCodeExpires: undefined
     });
-  }
+ //7. Email verification failed   
+if (updateResult.affected === 0) {
+      throw new AppError("Failed to verify email", 500);
+    }
+}
   async signIn(
     email: string,
     password: string

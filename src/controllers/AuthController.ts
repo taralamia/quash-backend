@@ -8,7 +8,6 @@ import { setRefreshCookie } from "../utils/cookies";
 import { email } from "zod";
 export class AuthController {
   constructor(
-    private readonly userService: UserService,
     private readonly authService: AuthService
   ) {}
 
@@ -19,7 +18,6 @@ export class AuthController {
   verifyEmail = async (req: Request, res: Response): Promise<void> => {
     const { email, code } = req.body;
     await this.authService.verifyEmail(email, code); // Just await, no return value
-
     res.status(200).json({
       success: true,
       message: "Email verified successfully",
