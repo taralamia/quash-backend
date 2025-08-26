@@ -7,9 +7,7 @@ import { AppError } from "../utils/AppError";
 import { setRefreshCookie } from "../utils/cookies";
 import { email } from "zod";
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   signUp = async (req: Request, res: Response): Promise<void> => {
     const result = await this.authService.signUp(req.body);

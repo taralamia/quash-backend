@@ -7,13 +7,14 @@ import bcrypt from "bcrypt";
 import type { CreateUserInput } from "../schemas/userSchema";
 import { toSafe } from "../utils/authHelper";
 import { AppError } from "../utils/AppError";
+import { BcryptUtils } from "../utils/bcryptUtils";
 export class UserService implements IUserService {
   constructor(
     private readonly users: Repository<User>,
     private readonly vehicles: Repository<Vehicle>
   ) {}
   async createUser(input: CreateUserInput): Promise<SafeUser> {
-    const hashed = await bcrypt.hash(input.password, 10);
+    const hashed = await BcryptUtils.hashPassword(input.password, 10);
     const user = this.users.create({
       fullName: input.fullName,
       email: input.email.toLowerCase().trim(),
