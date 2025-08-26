@@ -1,13 +1,12 @@
 import express from "express";
 import { AppDataSource } from "./data-source";
-import authRouter from "./routers/auth/authRouter";
+import routes from "./routers/routes";
 import { env } from "./constants/envConfig";
 import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 const PORT = env.PORT;
-
 app.use(express.json());
-app.use("/api/v1/users", authRouter);
+app.use(routes);
 app.use(errorHandler);
 AppDataSource.initialize()
   .then(() => {

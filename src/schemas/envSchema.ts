@@ -16,4 +16,8 @@ export const envSchema = z.object({
   EMAIL_PASSWORD: z.string(),
   EMAIL_FROM: z.email(),
   POSTGRES_SSL: z.string().optional().default("false"),
+  JWT_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
+  JWT_ACCESS_TOKEN_EXPIRATION: z.string().default("15m"),
+  JWT_REFRESH_TOKEN_EXPIRATION: z.string().default("7d"),
 });
