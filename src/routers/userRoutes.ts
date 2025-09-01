@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
-import { UserService } from "../service/UserService";
-import { AuthService } from "../service/AuthService";
+import { UserService } from "../service/userService";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data-source";
 import { Vehicle } from "../entity/Vehicle";

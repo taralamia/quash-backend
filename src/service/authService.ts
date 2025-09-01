@@ -1,9 +1,9 @@
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
 import { IAuthService } from "./interfaces/IAuthService";
-import { MailService } from "./MailService";
+import { MailService } from "./mailService";
 import { TokenService } from "./TokenService";
-import { UserService } from "./UserService";
+import { UserService } from "../service/userService";
 import { SafeUser } from "../types/interfaces/entity-helper";
 import type { CreateUserInput } from "../schemas/userSchema";
 import { toSafe } from "../utils/authHelper";

@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { AuthService } from "../service/AuthService";
-import { UserService } from "../service/UserService";
-import { UUIDValidatedRequest } from "../types/requests/UUIDValidatedRequest";
+import { AuthService } from "../service/authService";
+import { UserService } from "../service/userService";
 import type { CreateUserInput, loginInput } from "../schemas/userSchema";
-import { AppError } from "../utils/AppError";
 import { setRefreshCookie } from "../utils/cookies";
 import { email } from "zod";
 export class AuthController {
