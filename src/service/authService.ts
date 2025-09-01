@@ -3,7 +3,7 @@ import { User } from "../entity/User";
 import { IAuthService } from "./interfaces/IAuthService";
 import { MailService } from "./mailService";
 import { TokenService } from "./TokenService";
-import { UserService } from "../service/userService";
+import { UserService } from "./userService";
 import { SafeUser } from "../types/interfaces/entity-helper";
 import type { CreateUserInput } from "../schemas/userSchema";
 import { toSafe } from "../utils/authHelper";
@@ -74,17 +74,14 @@ export class AuthService implements IAuthService {
         "isVerified",
       ],
     });
-
     // 2. If user not found
     if (!user) {
       throw new AppError("User not found", 404);
     }
-
     // 3. If already verified
     if (user.isVerified) {
       throw new AppError("Email already verified", 400);
     }
-
     // 4. Check if Verification code expires
     if (
       !user.verificationCode ||
@@ -93,25 +90,21 @@ export class AuthService implements IAuthService {
     ) {
       throw new AppError("Invalid or expired verification code", 400);
     }
-
     // 5. compare the user provided code and database code
     if (user.verificationCode !== code) {
       throw new AppError("Invalid verification code", 400);
     }
-
     // 6. Mark the user as verified and clear verification fields
     const updateResult = await this.users.update(user.id, {
       isVerified: true,
       verificationCode: undefined,
       verificationCodeExpires: undefined,
     });
-
     // 7. Email verification failed
     if (updateResult.affected === 0) {
       throw new AppError("Failed to verify email", 500);
     }
   }
-
   async signIn(
     email: string,
     password: string
@@ -124,57 +117,43 @@ export class AuthService implements IAuthService {
     if (!user) {
       throw new AppError("Invalid email or password", 401);
     }
-
     // 2. Verify Email
     if (!user.isVerified) {
       throw new AppError("Please verify your email first", 403);
     }
-
     // 3. Verify Password
     const passwordMatch = await BcryptUtils.comparePassword(
       password,
       user.password
     );
-
     if (!passwordMatch) {
       throw new AppError("Invalid email or password", 401);
     }
-
     // 4. Generate Token
     const accessToken = this.tokenService.signAccess({ id: user.id });
     const refreshToken = this.tokenService.signRefresh({ id: user.id });
-
     return {
       user: toSafe(user),
       accessToken,
       refreshToken,
     };
   }
-
   async refresh(
-    refreshToken: string
-  ): Promise<{ user: SafeUser; accessToken: string; refreshToken: string }> {
-    if (!refreshToken) throw new AppError("No Refresh Token Provided", 401);
+  refreshToken: string
+): Promise<{ user: SafeUser; accessToken: string; refreshToken: string }> {
+  if (!refreshToken) throw new AppError("No Refresh Token Provided", 401);
+  
+  const payload = this.tokenService.verifyRefresh<{ id: string }>(refreshToken);
+  const user = await this.users.findOne({ where: { id: payload.id } });
+  if (!user) throw new AppError("User not found", 404);
 
-    let payload: { id: string };
+  const accessToken = this.tokenService.signAccess({ id: user.id }, "15m");
+  const newRefreshToken = this.tokenService.signRefresh(
+    { id: user.id },
+    "7d"
+  );
+  const safeUser: SafeUser = toSafe(user);
 
-    try {
-      payload = this.tokenService.verifyRefresh<{ id: string }>(refreshToken);
-    } catch {
-      throw new AppError("Invalid or expired refresh token", 401);
-    }
-
-    const user = await this.users.findOne({ where: { id: payload.id } });
-
-    if (!user) throw new AppError("User not found", 404);
-
-    const accessToken = this.tokenService.signAccess({ id: user.id }, "15m");
-    const newRefreshToken = this.tokenService.signRefresh(
-      { id: user.id },
-      "7d"
-    );
-    const safeUser: SafeUser = toSafe(user);
-
-    return { accessToken, refreshToken: newRefreshToken, user: safeUser };
-  }
+  return { accessToken, refreshToken: newRefreshToken, user: safeUser };
+}
 }

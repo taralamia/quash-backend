@@ -1,17 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, Index, CreateDateColumn, UpdateDateColumn } from "typeorm";
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 @Entity({ name: "vehicle" })
 @Index(["userId", "licensePlate"], { unique: true })
 export class Vehicle {
   @PrimaryGeneratedColumn("uuid")
-<<<<<<< Updated upstream
   id!: string;
-=======
-  id!: string; // FIXED
->>>>>>> Stashed changes
 
   @Column({ length: 64 })
   licensePlate!: string;
@@ -26,11 +19,7 @@ export class Vehicle {
   color?: string;
 
   @Column({ type: "uuid" })
-<<<<<<< Updated upstream
   userId!: string; 
-=======
-  userId!: string; // explicit uuid
->>>>>>> Stashed changes
 
   @CreateDateColumn()
   createdAt!: Date;
