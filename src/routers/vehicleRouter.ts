@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler";
 import { authMiddleware } from "../middleware/users/AuthMiddleware";
 import { AppDataSource } from "../data-source";
 import { Vehicle } from "../entity/Vehicle";
-import { VehicleService } from "../service/VehicleService";
+import { VehicleService } from "../service/vehicleService";
 import { VehicleController } from "../controllers/VehicleController";
 const vehicleRepo = AppDataSource.getRepository(Vehicle);
 const vehicleService = new VehicleService(vehicleRepo);

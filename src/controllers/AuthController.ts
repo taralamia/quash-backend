@@ -3,7 +3,6 @@ import { AuthService } from "../service/authService";
 import { UserService } from "../service/userService";
 import type { CreateUserInput, loginInput } from "../schemas/userSchema";
 import { setRefreshCookie } from "../utils/cookies";
-import { email } from "zod";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

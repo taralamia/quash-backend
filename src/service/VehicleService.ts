@@ -8,6 +8,7 @@ export class VehicleService implements IVehicleService {
     constructor(private readonly repo: Repository<Vehicle>) {}
     
   async createVehicle(userId: string, data: CreateVehicleInput): Promise<Vehicle> {
+    const plate = normalizePlate(data.licensePlate);
     const entity = this.repo.create({
       userId,
       licensePlate: normalizePlate(data.licensePlate),

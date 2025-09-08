@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, Index, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: "vehicle" })
-@Index(["userId", "licensePlate"], { unique: true })
+@Index("uq_vehicle_user_plate", ["userId", "licensePlate"], { unique: true })
 export class Vehicle {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
