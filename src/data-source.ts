@@ -1,9 +1,10 @@
 import "reflect-metadata";
-import { DataSource } from "typeorm";
+import { DataSource, Or } from "typeorm";
 import "dotenv/config";
 import path from "path";
 import { User } from "./entity/User";
 import { Vehicle } from "./entity/Vehicle";
+import {Order} from "./entity/Order";
 import { env } from "./constants/envConfig";
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
   logging: !!env.POSTGRES_LOGGING,
-  entities: [User, Vehicle],
+  entities: [User, Vehicle,Order],
   synchronize: true,
   migrations: [path.join(__dirname, "/migrations/*.js")],
   subscribers: [path.join(__dirname, "/subscriber/*.js")],

@@ -1,11 +1,11 @@
 import type { QueryFailedError } from "typeorm";
 export interface PgErrorInfo {
-  code?: string;       // e.g. "23505"
-  table?: string;      // e.g. "vehicle"
+  code?: string; // e.g. "23505"
+  table?: string; // e.g. "vehicle"
   constraint?: string; // e.g. "uq_vehicle_user_plate"
-  schema?: string;     // e.g. "public"
-  detail?: string;     // raw pg detail
-  column?: string;     // failing column (if provided)
+  schema?: string; // e.g. "public"
+  detail?: string; // raw pg detail
+  column?: string; // failing column (if provided)
 }
 /** Minimal, structural view of the node-postgres / TypeORM driver error. */
 interface PgDriverErrorShape {

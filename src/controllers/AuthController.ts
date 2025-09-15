@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { AuthService } from "../service/authService";
-import { UserService } from "../service/userService";
+import { AuthService } from "../service/AuthService";
+import { UserService } from "../service/UserService";
 import type { CreateUserInput, loginInput } from "../schemas/userSchema";
 import { setRefreshCookie } from "../utils/cookies";
 export class AuthController {
