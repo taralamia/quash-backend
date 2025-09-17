@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { UserService } from "../service/UserService";
 import { AppError } from "../utils/AppError";
+import { sendNegotiated } from "../presentation/http/negotiation";
+import { send } from "process";
 export class UserController {
   constructor(private readonly userService: UserService) {}
   // Create user
@@ -11,7 +13,7 @@ export class UserController {
   getUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const user = await this.userService.getUser(id);
-    res.status(200).json(user);
+    sendNegotiated(req, res, user, "User Details");    
   };
   updateUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
@@ -27,7 +29,7 @@ export class UserController {
       );
     }
     const updatedUser = await this.userService.updateUser(id, patch);
-    res.status(200).json(updatedUser);
+    sendNegotiated(req, res, updatedUser, "User Updated");
   };
   deleteUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;

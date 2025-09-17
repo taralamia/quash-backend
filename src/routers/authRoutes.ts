@@ -7,7 +7,7 @@ import { UserService } from "../service/UserService";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data-source";
 import { Vehicle } from "../entity/Vehicle";
-
+import { requireJsonBody } from "../middleware/requireJsonBody";
 const router = Router();
 
 const userRepo = AppDataSource.getRepository(User);
@@ -23,8 +23,8 @@ const authService = new AuthService(
 );
 const authController = new AuthController(authService);
 //Auth routes
-router.post("/auth/signup", authController.signUp);
-router.post("/auth/verify-email", authController.verifyEmail);
-router.post("/auth/signin", authController.signIn);
-router.post("/auth/refresh", authController.refresh);
+router.post("/auth/signup",requireJsonBody(), authController.signUp);
+router.post("/auth/verify-email", requireJsonBody(),authController.verifyEmail);
+router.post("/auth/signin", requireJsonBody(),authController.signIn);
+router.post("/auth/refresh", requireJsonBody(),authController.refresh);
 export default router;

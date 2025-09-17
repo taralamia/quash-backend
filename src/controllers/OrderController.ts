@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { createOrderSchema } from "../schemas/orderSchema";
 import { OrderService } from "../service/OrderService";
 import { AppError } from "../utils/AppError";
+import { sendNegotiated } from "../presentation/http/negotiation";
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
   // POST /orders (user creates for self)
@@ -16,6 +17,8 @@ export class OrderController {
       actorId,
       parsed
     );
-    res.status(201).json({ success: true, created });
+    res.status(201);
+    res.setHeader("Location", `/api/v1/orders/${created.id}`);
+    sendNegotiated(req, res, { success: true, order: created }, "Order Created");
   };
 }
