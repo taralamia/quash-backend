@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 // Define the schema
 export const envSchema = z.object({
   DB_USER: z.string(),

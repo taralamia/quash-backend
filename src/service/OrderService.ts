@@ -5,7 +5,6 @@ import { AppError } from "../utils/AppError";
 import { IOrderService } from "./interfaces/IOrderService";
 import { CreateOrderInput } from "../schemas/orderSchema";
 import { IVehicleService } from "./interfaces/IVehicleService";
-
 export class OrderService implements IOrderService {
   constructor(
     private readonly orders: Repository<Order>,

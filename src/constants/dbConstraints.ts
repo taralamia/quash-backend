@@ -1,4 +1,3 @@
-// src/constants/dbConstraints.ts
 export const TABLE = {
   VEHICLE: "vehicle",
   ORDERS: "orders",

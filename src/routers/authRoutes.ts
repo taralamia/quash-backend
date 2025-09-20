@@ -9,7 +9,6 @@ import { AppDataSource } from "../data-source";
 import { Vehicle } from "../entity/Vehicle";
 import { requireJsonBody } from "../middleware/requireJsonBody";
 const router = Router();
-
 const userRepo = AppDataSource.getRepository(User);
 const vehicleRepo = AppDataSource.getRepository(Vehicle);
 const mailService = new MailService();

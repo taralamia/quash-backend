@@ -1,4 +1,3 @@
-// src/middleware/roleGuard.ts
 import { RequestHandler } from "express";
 import { AppError } from "../../utils/AppError";
 export const roleGuard = (
