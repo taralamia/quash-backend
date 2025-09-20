@@ -15,8 +15,12 @@ export class OrderService implements IOrderService {
     createdById: string,
     data: CreateOrderInput
   ): Promise<Order> {
-    if (!userId || !createdById) throw new AppError("Unauthorized", 401);
-    if (!data.vehicleId) throw new AppError("vehicleId is required", 400);
+    if (!userId || !createdById) {
+    throw new AppError("Unauthorized", 401);
+    }
+    if (!data.vehicleId){
+    throw new AppError("vehicleId is required", 400);
+    }
     if (data.appointmentDate.getTime() < Date.now()) {
       throw new AppError("appointmentDate must be in the future", 400);
     }
