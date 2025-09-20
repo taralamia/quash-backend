@@ -19,6 +19,7 @@ export class OrderController {
     );
     res.status(201);
     res.setHeader("Location", `/api/v1/orders/${created.id}`);
-    sendNegotiated(req, res, { success: true, order: created }, "Order Created");
+    res.locals.payload = { success: true, order: created };
+    res.locals.htmlTitle = "Order Created";
   };
 }
