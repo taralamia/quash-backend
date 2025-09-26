@@ -1,20 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-@Entity()
+import { Entity, PrimaryGeneratedColumn, Column, Index, CreateDateColumn, UpdateDateColumn } from "typeorm";
+
+@Entity({ name: "vehicle" })
+@Index("uq_vehicle_user_plate", ["userId", "licensePlate"], { unique: true })
 export class Vehicle {
   @PrimaryGeneratedColumn("uuid")
-  id!: number;
+  id!: string;
 
-  @Column()
+  @Column({ length: 64 })
   licensePlate!: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 64 })
   make?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 64 })
   model?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 32 })
   color?: string;
-  @Column()
-  userId!: string;
+
+  @Column({ type: "uuid" })
+  userId!: string; 
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

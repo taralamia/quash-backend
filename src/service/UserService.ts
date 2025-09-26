@@ -3,7 +3,6 @@ import { User } from "../entity/User";
 import { Vehicle } from "../entity/Vehicle";
 import { IUserService } from "./interfaces/IUserService";
 import { SafeUser } from "../types/interfaces/entity-helper";
-import bcrypt from "bcrypt";
 import type { CreateUserInput } from "../schemas/userSchema";
 import { toSafe } from "../utils/authHelper";
 import { AppError } from "../utils/AppError";

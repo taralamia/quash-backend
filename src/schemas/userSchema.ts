@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 export const createUserSchema = z.object({
   fullName: z.string().min(1, "Name is required"),
   email: z.email("Invalid email address"),
@@ -18,12 +17,11 @@ export const createUserSchema = z.object({
     )
     .optional(),
 });
-
 export const findOneUserSchema = z.object({
-  id: z.string().uuid("Invalid UUID format"),
+  id: z.uuid("Invalid UUID format"),
 });
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
 export const updateUserSchema = z

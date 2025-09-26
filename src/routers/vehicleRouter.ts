@@ -1,0 +1,22 @@
+import { Router } from "express";
+import asyncHandler from "../utils/asyncHandler";
+import { authMiddleware } from "../middleware/users/AuthMiddleware";
+import { AppDataSource } from "../data-source";
+import { Vehicle } from "../entity/Vehicle";
+import { VehicleService } from "../service/VehicleService";
+import { VehicleController } from "../controllers/VehicleController";
+import { requireJsonBody } from "../middleware/requireJsonBody";
+import { negotiationMiddleware } from "../middleware/negotiation";
+const vehicleRepo = AppDataSource.getRepository(Vehicle);
+const vehicleService = new VehicleService(vehicleRepo);
+const vehicleController = new VehicleController(vehicleService);
+const router = Router();
+router.use(authMiddleware);
+//vehicle routes
+router.post("/vehicle/create", requireJsonBody(),asyncHandler(vehicleController.create));
+router.get("/vehicle/list", asyncHandler(vehicleController.list));
+router.get("/vehicle/:id", asyncHandler(vehicleController.get));
+router.patch("/vehicle/:id", asyncHandler(vehicleController.update));
+router.delete("/vehicle/:id", asyncHandler(vehicleController.remove));
+router.use(negotiationMiddleware);
+export default router;

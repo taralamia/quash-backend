@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/AuthController";
 import { AuthService } from "../service/AuthService";
-import { MailService } from "../service/MailService";
+import { MailService } from "../service/mailService";
 import { TokenService } from "../service/TokenService";
 import { UserService } from "../service/UserService";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data-source";
 import { Vehicle } from "../entity/Vehicle";
-
+import { requireJsonBody } from "../middleware/requireJsonBody";
+import { negotiationMiddleware } from "../middleware/negotiation";
 const router = Router();
-
 const userRepo = AppDataSource.getRepository(User);
 const vehicleRepo = AppDataSource.getRepository(Vehicle);
 const mailService = new MailService();
@@ -23,8 +23,10 @@ const authService = new AuthService(
 );
 const authController = new AuthController(authService);
 //Auth routes
+router.use(requireJsonBody());
 router.post("/auth/signup", authController.signUp);
-router.post("/auth/verify-email", authController.verifyEmail);
-router.post("/auth/signin", authController.signIn);
-router.post("/auth/refresh", authController.refresh);
+router.post("/auth/verify-email",authController.verifyEmail);
+router.post("/auth/signin",authController.signIn);
+router.post("/auth/refresh",authController.refresh);
+router.use(negotiationMiddleware);
 export default router;

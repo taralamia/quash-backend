@@ -1,4 +1,3 @@
-// src/middleware/validateUUIDParam.ts
 import { Request, Response, NextFunction } from "express";
 import { validate as isUUID } from "uuid";
 export const validateUUIDParam = (
