@@ -3,11 +3,13 @@ import { AppDataSource } from "./data-source";
 import routes from "./routers/routes";
 import { env } from "./constants/envConfig";
 import { errorHandler } from "./middleware/errorHandler";
+import {rateLimiter} from "./middleware/rateLimiter";
 import cookieParser from "cookie-parser";
 const app = express();
 const PORT = env.PORT;
 app.use(express.json());
 app.use(cookieParser());
+app.use(rateLimiter);
 app.use(routes);
 app.use(errorHandler);
 AppDataSource.initialize()
