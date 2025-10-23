@@ -4,7 +4,7 @@ import { createVehicleSchema, updateVehicleSchema } from "../schemas/vehicleSche
 import { AppError } from "../utils/AppError";
 export class VehicleController {
     constructor(private readonly service: IVehicleService) {}
-     create = async (req: Request, res: Response, _next: NextFunction) => {
+     create = async (req: Request, res: Response, _next?: NextFunction) => {
     const profile = req.user; 
     if (!profile?.id) throw new AppError("Unauthorized", 401); 
     const data = createVehicleSchema.parse(req.body);
@@ -14,14 +14,14 @@ export class VehicleController {
     res.locals.payload = { success: true, vehicle };
     res.locals.htmlTitle = "Vehicle Created";
   };
-  list = async (req: Request, res: Response, _next: NextFunction) => {
+  list = async (req: Request, res: Response, _next?: NextFunction) => {
     const profile = req.user;
     if (!profile?.id) throw new AppError("Unauthorized", 401);
     const vehicles = await this.service.listVehicles?.(profile.id) ??[]; 
     res.locals.payload = { success: true, vehicles };
     res.locals.htmlTitle = "Vehicle List";
   };
-   get = async (req: Request, res: Response, _next: NextFunction) => {
+   get = async (req: Request, res: Response, _next?: NextFunction) => {
     const profile = req.user;
     if (!profile?.id) throw new AppError("Unauthorized", 401);
 
@@ -31,7 +31,7 @@ export class VehicleController {
     res.locals.payload = { success: true, vehicle };
     res.locals.htmlTitle = "Vehicle Details";
   };
-   update = async (req: Request, res: Response, _next: NextFunction) => {
+   update = async (req: Request, res: Response, _next?: NextFunction) => {
     const profile = req.user;
     if (!profile?.id) throw new AppError("Unauthorized", 401);
     const { id } = req.params;
@@ -40,7 +40,7 @@ export class VehicleController {
     res.locals.payload = { success: true, vehicle };
     res.locals.htmlTitle = "Vehicle Updated";
   };
-   remove = async (req: Request, res: Response, _next: NextFunction) => {
+   remove = async (req: Request, res: Response, _next?: NextFunction) => {
     const profile = req.user;
     if (!profile?.id) throw new AppError("Unauthorized", 401);
     const { id } = req.params;
