@@ -16,7 +16,6 @@ if (typeof varyRes.vary === "function") {
     values.add("Accept");
     res.setHeader("Vary", Array.from(values).join(", "));
   }
-
   res.type(chosen);
   return chosen as Supported;
 }

@@ -1,21 +1,19 @@
 import { Router } from "express";
 import asyncHandler from "../utils/asyncHandler";
-import { authMiddleware } from "../middleware/users/AuthMiddleware";
 import { AppDataSource } from "../data-source";
 import { Vehicle } from "../entity/Vehicle";
 import { VehicleService } from "../service/VehicleService";
 import { VehicleController } from "../controllers/VehicleController";
 import { requireJsonBody } from "../middleware/requireJsonBody";
-import { withNegotiation } from "../presentation/http/withNegotiation";
+import { validateUUIDParam } from "../middleware/users/validateUUIDParam";
 const vehicleRepo = AppDataSource.getRepository(Vehicle);
 const vehicleService = new VehicleService(vehicleRepo);
 const vehicleController = new VehicleController(vehicleService);
 const router = Router();
-router.use(authMiddleware);
 //vehicle routes
-router.post("/vehicle/create", requireJsonBody(), withNegotiation(vehicleController.create));
-router.get("/vehicle/list",withNegotiation (vehicleController.list));
-router.get("/vehicle/:id", withNegotiation(vehicleController.get));
-router.patch("/vehicle/:id", withNegotiation(vehicleController.update));
-router.delete("/vehicle/:id", withNegotiation(vehicleController.remove));
+router.post("/create", requireJsonBody(), vehicleController.create);
+router.get("/list",vehicleController.list);
+router.get("/:id",validateUUIDParam,vehicleController.get);
+router.patch("/:id",validateUUIDParam,vehicleController.update);
+router.delete("/:id",validateUUIDParam,vehicleController.remove);
 export default router;

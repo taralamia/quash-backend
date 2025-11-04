@@ -6,11 +6,9 @@ export const validateUUIDParam = (
   next: NextFunction
 ) => {
   const { id } = req.params;
-
   if (!isUUID(id)) {
     res.status(400).json({ error: "Invalid UUID format" });
   }
-
-  (req as any).validatedId = id;
+(req as unknown as { validatedId?: string }).validatedId = id;
   next();
 };
